@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "653272769106",
+    "project_id": "instagramclonetut-a4714",
+    "storage_bucket": "instagramclonetut-a4714.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:653272769106:android:c972ece24040f500b6358b",
+        "android_client_info": {
+          "package_name": "com.example.instagram"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "653272769106-52u8n96pdsrg0d9f74ibc4626fvnvk42.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAh-gKPB_TYoFuDuYJookhhTYPFAdTFRxc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "653272769106-52u8n96pdsrg0d9f74ibc4626fvnvk42.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
