@@ -1,42 +1,67 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:instagram/resources/auth_method.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:instagram/utilis/colors.dart';
 import 'package:instagram/utilis/utilis.dart';
 
+import '../resources/auth_method.dart';
 import '../widgets/text_field.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class SignUpScreen extends StatefulWidget {
+  const SignUpScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  bool _isLoading = false;
+  final TextEditingController _bioController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
+  Uint8List? _image;
+   bool _isLoading=false;
+
   @override
+  // select image for the profile pic method
+  void selectimage() async {
+    Uint8List file = await pickImage(ImageSource.gallery);
+    setState(() {
+      _image = file;
+    });
+  }
+
+  void signUpUser() async {
+    setState(() {
+    _isLoading=true;
+
+    });
+    String res = await AuthMethod().signUpUser(
+      email: _emailController.text,
+      password: _passwordController.text,
+      username: _usernameController.text,
+      bio: _bioController.text,
+      file: _image!,
+    );
+    setState(() {
+    _isLoading=false;
+    
+    });
+      if(res!='success'){
+        showSnackBar(res, context);
+      }else{
+
+      }
+  }
+
   void dispose() {
     super.dispose();
     _emailController.dispose();
     _passwordController.dispose();
-  }
-
-  void loginUser() async {
-    setState(() {
-      _isLoading = true;
-    });
-    String res = await AuthMethod().loginMethod(
-        email: _emailController.text, password: _passwordController.text);
-    if (res == 'Success') {
-    } else {
-      showSnackBar(res, context);
-    }
-    setState(() {
-      _isLoading = false;
-    });
+    _bioController.dispose();
+    _usernameController.dispose();
   }
 
   @override
@@ -61,6 +86,41 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(
                 height: 64,
               ),
+              Stack(
+                children: [
+                  _image != null
+                      ? CircleAvatar(
+                          radius: 64,
+                          backgroundImage: MemoryImage(_image!),
+                        )
+                      : CircleAvatar(
+                          radius: 64,
+                          backgroundImage:
+                              AssetImage('assets/no-profile-pic-icon-11.jpg'),
+                        ),
+                  Positioned(
+                    bottom: -10,
+                    left: 80,
+                    child: IconButton(
+                      onPressed: () {
+                        selectimage();
+                      },
+                      icon: Icon(Icons.add_a_photo),
+                    ),
+                  )
+                ],
+              ),
+              const SizedBox(
+                height: 24,
+              ),
+              TextFieldInput(
+                hintText: 'Enter username',
+                textInputType: TextInputType.text,
+                textEditingController: _usernameController,
+              ),
+              const SizedBox(
+                height: 24,
+              ),
               TextFieldInput(
                 hintText: 'Enter your email',
                 textInputType: TextInputType.emailAddress,
@@ -70,7 +130,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 height: 24,
               ),
               TextFieldInput(
-                hintText: 'Enter your email',
+                hintText: 'Enter your Password',
                 textInputType: TextInputType.text,
                 textEditingController: _passwordController,
                 isPass: true,
@@ -78,16 +138,18 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(
                 height: 24,
               ),
+              TextFieldInput(
+                hintText: 'Enter your bio',
+                textInputType: TextInputType.text,
+                textEditingController: _bioController,
+              ),
+              const SizedBox(
+                height: 24,
+              ),
               InkWell(
-                onTap: loginUser,
-                child: Container(
-                  child: _isLoading
-                      ? Center(
-                          child: const CircularProgressIndicator(
-                            color: primaryColor,
-                          ),
-                        )
-                      : Text('Log In'),
+                onTap: signUpUser,
+                child:Container(
+                  child:_isLoading?Center(child: const CircularProgressIndicator(color: primaryColor,),) : Text('Log In'),
                   width: double.infinity,
                   alignment: Alignment.center,
                   padding: EdgeInsets.symmetric(vertical: 12),
